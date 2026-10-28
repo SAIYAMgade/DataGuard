@@ -1,0 +1,41 @@
+app:
+  name: "DataGuard"
+  version: "1.0.0"
+  environment: "development"
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "dataguard"
+  user: "postgres"
+  password: ""
+  pool_size: 5
+  max_overflow: 10
+  timeout_seconds: 30
+
+ingestion:
+  supported_encodings:
+    - "utf-8"
+    - "utf-8-sig"
+    - "latin-1"
+  required_columns:
+    - "transaction_id"
+    - "account_id"
+    - "transaction_date"
+    - "transaction_type"
+    - "amount"
+    - "currency"
+    - "transaction_status"
+  max_batch_size: 50000
+
+reconciliation:
+  default_tolerance: 0.01
+  supported_currencies:
+    - "USD"
+    - "EUR"
+    - "GBP"
+  match_key: "transaction_id"
+
+reporting:
+  excel_output_path: "reports/DataGuard_Quality_Report.xlsx"
+  csv_output_dir: "reports/sample_outputs"

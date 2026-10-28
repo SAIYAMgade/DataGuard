@@ -1,0 +1,104 @@
+[
+  {
+    "record_reference": "SRC_REC_000011",
+    "rule_id": "DQ001",
+    "target_field": "transaction_id",
+    "description": "Empty transaction_id"
+  },
+  {
+    "record_reference": "TXN_BASE_000016",
+    "rule_id": "DQ002",
+    "target_field": "account_id",
+    "description": "Empty account_id"
+  },
+  {
+    "record_reference": "TXN_BASE_000021",
+    "rule_id": "DQ003",
+    "target_field": "transaction_date",
+    "description": "Missing date"
+  },
+  {
+    "record_reference": "TXN_BASE_000026",
+    "rule_id": "DQ004",
+    "target_field": "amount",
+    "description": "Missing amount"
+  },
+  {
+    "record_reference": "TXN_BASE_000031",
+    "rule_id": "DQ005",
+    "target_field": "currency",
+    "description": "Missing currency"
+  },
+  {
+    "record_reference": "TXN_BASE_000036",
+    "rule_id": "DQ006",
+    "target_field": "transaction_status",
+    "description": "Missing status"
+  },
+  {
+    "record_reference": "TXN_BASE_000041",
+    "rule_id": "DQ007",
+    "target_field": "record_hash",
+    "description": "Exact duplicate payload"
+  },
+  {
+    "record_reference": "TXN_BASE_000046",
+    "rule_id": "DQ008",
+    "target_field": "transaction_id",
+    "description": "Duplicate transaction ID with different amount"
+  },
+  {
+    "record_reference": "TXN_BIZ_DUP_0001",
+    "rule_id": "DQ009",
+    "target_field": "account_id,amount,transaction_date,transaction_type",
+    "description": "Potential business duplicate"
+  },
+  {
+    "record_reference": "TXN_BASE_000061",
+    "rule_id": "DQ010",
+    "target_field": "amount",
+    "description": "Fractional cents: 145.8945"
+  },
+  {
+    "record_reference": "TXN_BASE_000071",
+    "rule_id": "DQ011",
+    "target_field": "amount,transaction_type",
+    "description": "Negative deposit"
+  },
+  {
+    "record_reference": "TXN_BASE_000081",
+    "rule_id": "DQ012",
+    "target_field": "amount",
+    "description": "Extreme outlier amount $55M"
+  },
+  {
+    "record_reference": "TXN_BASE_000091",
+    "rule_id": "DQ013",
+    "target_field": "transaction_date",
+    "description": "Future date"
+  },
+  {
+    "record_reference": "TXN_BASE_000101",
+    "rule_id": "DQ014",
+    "target_field": "transaction_date,ingestion_timestamp",
+    "description": "Stale transaction > 90 days"
+  },
+  {
+    "record_reference": "TXN_BASE_000111",
+    "rule_id": "DQ015",
+    "target_field": "account_id",
+    "description": "Unknown account ACC_UNKNOWN_9999"
+  },
+  {
+    "record_reference": "TXN_BASE_000121",
+    "rule_id": "DQ016",
+    "target_field": "transaction_type,transaction_status",
+    "description": "Invalid type CRYPTO_STAKE"
+  },
+  {
+    "record_reference": "TXN_BASE_000131",
+    "rule_id": "DQ017",
+    "target_field": "reference_id,transaction_type",
+    "description": "Reversal missing reference_id"
+  }
+]

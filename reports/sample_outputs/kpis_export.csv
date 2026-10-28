@@ -1,0 +1,2 @@
+batch_id,run_id,total_records,passed_records,failed_records,pass_rate_pct,completeness_score,validity_score,uniqueness_score,integrity_score,overall_quality_score,open_critical_count,total_recon_exceptions,total_absolute_diff,evaluated_at
+BATCH_20261028_110237,RUN_B9ED1D1141B8,500,500,0,100.00,100.00,100.00,100.00,100.00,100.00,12,313,110661388.1750,2026-10-28 16:32:38.635901+05:30

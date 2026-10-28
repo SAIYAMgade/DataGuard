@@ -1,0 +1,171 @@
+rules:
+  # ----------------------------------------------------
+  # Completeness Checks
+  # ----------------------------------------------------
+  - rule_id: DQ001
+    name: "Missing Transaction Identifier"
+    dimension: "COMPLETENESS"
+    severity: "CRITICAL"
+    target_field: "transaction_id"
+    description: "Transaction record must possess a non-null, non-empty primary identifier."
+    investigation_action: "Inspect source ingestion feed for dropped identifier columns or malformed delimiters."
+    enabled: true
+
+  - rule_id: DQ002
+    name: "Missing Account Identifier"
+    dimension: "COMPLETENESS"
+    severity: "CRITICAL"
+    target_field: "account_id"
+    description: "Transaction must be associated with an account identifier."
+    investigation_action: "Confirm source transaction payload mapping; missing account prevents ledger posting."
+    enabled: true
+
+  - rule_id: DQ003
+    name: "Missing Transaction Date"
+    dimension: "COMPLETENESS"
+    severity: "HIGH"
+    target_field: "transaction_date"
+    description: "Transaction date must be present and parseable as a valid ISO calendar date."
+    investigation_action: "Review source date formatting or check timestamp extraction logic."
+    enabled: true
+
+  - rule_id: DQ004
+    name: "Missing Monetary Amount"
+    dimension: "COMPLETENESS"
+    severity: "CRITICAL"
+    target_field: "amount"
+    description: "Transaction must specify an exact non-null monetary quantity."
+    investigation_action: "Verify source payload parsing; records with missing amounts cannot settle."
+    enabled: true
+
+  - rule_id: DQ005
+    name: "Missing Currency Code"
+    dimension: "COMPLETENESS"
+    severity: "HIGH"
+    target_field: "currency"
+    description: "Transaction must specify a valid 3-character ISO 4217 currency code."
+    investigation_action: "Verify whether currency is defaulted by account or omitted from input payload."
+    enabled: true
+
+  - rule_id: DQ006
+    name: "Missing Transaction Status"
+    dimension: "COMPLETENESS"
+    severity: "HIGH"
+    target_field: "transaction_status"
+    description: "Transaction status must be populated to indicate operational state."
+    investigation_action: "Check ingestion pipeline status default mapping or source system export."
+    enabled: true
+
+  # ----------------------------------------------------
+  # Uniqueness Checks
+  # ----------------------------------------------------
+  - rule_id: DQ007
+    name: "Exact Duplicate Source Record"
+    dimension: "UNIQUENESS"
+    severity: "HIGH"
+    target_field: "record_hash"
+    description: "Identical transaction record ingested multiple times with the exact same payload."
+    investigation_action: "Check upstream batch rerun flags or ingestion retry mechanism."
+    enabled: true
+
+  - rule_id: DQ008
+    name: "Duplicate Transaction Identifier"
+    dimension: "UNIQUENESS"
+    severity: "CRITICAL"
+    target_field: "transaction_id"
+    description: "Multiple distinct transaction records share the same transaction identifier."
+    investigation_action: "Inspect identifier generator in source system to ensure global uniqueness."
+    enabled: true
+
+  - rule_id: DQ009
+    name: "Potential Business Duplicate"
+    dimension: "UNIQUENESS"
+    severity: "MEDIUM"
+    target_field: "account_id,amount,transaction_date,transaction_type"
+    description: "Multiple transactions for the same account, identical amount, date, and type."
+    investigation_action: "Review customer activity with operations to rule out double-swipe or repeated clicks."
+    enabled: true
+
+  # ----------------------------------------------------
+  # Monetary Validity Checks
+  # ----------------------------------------------------
+  - rule_id: DQ010
+    name: "Invalid Decimal Precision"
+    dimension: "VALIDITY"
+    severity: "MEDIUM"
+    target_field: "amount"
+    description: "Monetary amount contains more than 2 decimal places for fiat currency."
+    investigation_action: "Check currency exponent configuration or upstream floating-point rounding."
+    enabled: true
+
+  - rule_id: DQ011
+    name: "Sign Inconsistency for Transaction Type"
+    dimension: "VALIDITY"
+    severity: "HIGH"
+    target_field: "amount,transaction_type"
+    description: "Deposits and standard payments must be strictly positive (>0); negative amounts reserved for refunds/reversals."
+    investigation_action: "Verify whether source system sends net or gross signs and adjust ingestion mapping."
+    enabled: true
+
+  - rule_id: DQ012
+    name: "Extreme Outlier Amount"
+    dimension: "VALIDITY"
+    severity: "MEDIUM"
+    target_field: "amount"
+    description: "Transaction amount exceeds operational threshold (e.g. 1,000,000.00) without high-value flag."
+    investigation_action: "Escalate to treasury operations for high-value transaction authorization."
+    enabled: true
+
+  # ----------------------------------------------------
+  # Timeliness / Date Checks
+  # ----------------------------------------------------
+  - rule_id: DQ013
+    name: "Future-Dated Transaction"
+    dimension: "TIMELINESS"
+    severity: "HIGH"
+    target_field: "transaction_date"
+    description: "Transaction date is ahead of current business ingestion date without scheduled flag."
+    investigation_action: "Check clock synchronization on originating client or server."
+    enabled: true
+
+  - rule_id: DQ014
+    name: "Excessive Ingestion Latency"
+    dimension: "TIMELINESS"
+    severity: "LOW"
+    target_field: "transaction_date,ingestion_timestamp"
+    description: "Transaction occurred more than 90 days before ingestion timestamp."
+    investigation_action: "Confirm whether batch is an authorized historical backfill or stuck pipeline backlog."
+    enabled: true
+
+  # ----------------------------------------------------
+  # Referential Integrity Checks
+  # ----------------------------------------------------
+  - rule_id: DQ015
+    name: "Unknown Account Reference"
+    dimension: "INTEGRITY"
+    severity: "CRITICAL"
+    target_field: "account_id"
+    description: "Account referenced in transaction does not exist in account dimension registry."
+    investigation_action: "Validate account onboarding feed order; transaction may have arrived before account sync."
+    enabled: true
+
+  # ----------------------------------------------------
+  # Allowed Values & Consistency Checks
+  # ----------------------------------------------------
+  - rule_id: DQ016
+    name: "Invalid Transaction Type or Status"
+    dimension: "VALIDITY"
+    severity: "HIGH"
+    target_field: "transaction_type,transaction_status"
+    description: "Transaction type or status does not belong to authorized reference enumerations."
+    investigation_action: "Update reference taxonomy or remediate unexpected upstream enum values."
+    enabled: true
+
+  - rule_id: DQ017
+    name: "Reversal Missing Original Reference"
+    dimension: "CONSISTENCY"
+    severity: "HIGH"
+    target_field: "reference_id,transaction_type"
+    description: "Reversal or refund transaction must reference the original transaction identifier."
+    investigation_action: "Request originating payment reference from issuing gateway."
+    enabled: true
