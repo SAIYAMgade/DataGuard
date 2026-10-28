@@ -39,7 +39,9 @@ DataGuard establishes an automated quality firewall:
 
 ---
 
-## 3. System Architecture
+## 3. System Architecture & Data Lineage
+
+![DataGuard Data Lineage Architecture](docs/images/dataguard_data_lineage.png)
 
 ```mermaid
 flowchart TD
@@ -280,6 +282,8 @@ python -m pytest -v
 ---
 
 ## 9. Actual Pipeline Execution Results
+
+![DataGuard Quality Scorecard](docs/images/dataguard_quality_scorecard.png)
 
 Below are the actual, verified results produced by DataGuard on the sample datasets:
 
